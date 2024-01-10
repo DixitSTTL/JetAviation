@@ -34,6 +34,7 @@ import com.app.jetaviation.MainDestinations.DESTINATION_KEY
 import com.app.jetaviation.MainDestinations.SOURCE_KEY
 import com.app.jetaviation.ui.screen.dashbord.DashBoardScreen
 import com.app.jetaviation.ui.screen.filght.FlightListScreen
+import com.app.jetaviation.ui.screen.trips.TripScreen
 
 @Composable
 fun NavGraph(
@@ -69,6 +70,7 @@ fun NavGraph(
             BackHandler {
                 finishActivity()
             }
+            TripScreen()
         }
 
         composable("${MainDestinations.FLIGHT_LIST}/{$SOURCE_KEY}/{$DESTINATION_KEY}/{$DATE_KEY}",
