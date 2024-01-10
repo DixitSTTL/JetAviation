@@ -24,10 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.app.jetaviation.ui.screen.DashBoardScreen
+import androidx.navigation.navArgument
+import com.app.jetaviation.MainDestinations.DATE_KEY
+import com.app.jetaviation.MainDestinations.DESTINATION_KEY
+import com.app.jetaviation.MainDestinations.SOURCE_KEY
+import com.app.jetaviation.ui.screen.dashbord.DashBoardScreen
+import com.app.jetaviation.ui.screen.filght.FlightListScreen
 
 @Composable
 fun NavGraph(
@@ -54,7 +60,9 @@ fun NavGraph(
                 finishActivity()
             }
 
-            DashBoardScreen()
+            DashBoardScreen { source, dest, date ->
+                actions.navigateFlightList(source, dest,date)
+            }
         }
 
         composable(AppTabs.TRIPS.route) {
@@ -63,13 +71,35 @@ fun NavGraph(
             }
         }
 
+        composable("${MainDestinations.FLIGHT_LIST}/{$SOURCE_KEY}/{$DESTINATION_KEY}/{$DATE_KEY}",
+            arguments = listOf(
+                navArgument(SOURCE_KEY) { type = NavType.StringType },
+                navArgument(DESTINATION_KEY) { type = NavType.StringType },
+                navArgument(DATE_KEY) { type = NavType.LongType }
+            )
+        ) { backStackEntry: NavBackStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+
+            val SOURCE_KEY = arguments.getString(SOURCE_KEY)
+            val DESTINATION_KEY = arguments.getString(DESTINATION_KEY)
+            val DATE_KEY = arguments.getLong(DATE_KEY)
+
+
+            FlightListScreen(SOURCE_KEY,DESTINATION_KEY,DATE_KEY)
+        }
+
     }
 }
 
 object MainDestinations {
     const val ONBOARDING_ROUTE = "onboarding"
     const val COURSE_DETAIL_ROUTE = "course"
-    const val COURSE_DETAIL_ID_KEY = "courseId"
+    const val FLIGHT_LIST = "flight_list"
+
+
+    const val SOURCE_KEY = "source_key"
+    const val DESTINATION_KEY = "destination_key"
+    const val DATE_KEY = "date_key"
 }
 
 /**
@@ -81,27 +111,10 @@ class MainActions(navController: NavHostController) {
     }
 
     // Used from COURSES_ROUTE
-    val openCourse = { newCourseId: Long, from: NavBackStackEntry ->
+    val navigateFlightList = { source: String, destination: String , date: Long ->
         // In order to discard duplicated navigation events, we check the Lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigate("${MainDestinations.COURSE_DETAIL_ROUTE}/$newCourseId")
-        }
-    }
+        navController.navigate("${MainDestinations.FLIGHT_LIST}/$source/$destination/$date")
 
-    // Used from COURSE_DETAIL_ROUTE
-    val relatedCourse = { newCourseId: Long, from: NavBackStackEntry ->
-        // In order to discard duplicated navigation events, we check the Lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigate("${MainDestinations.COURSE_DETAIL_ROUTE}/$newCourseId")
-        }
-    }
-
-    // Used from COURSE_DETAIL_ROUTE
-    val upPress: (from: NavBackStackEntry) -> Unit = { from ->
-        // In order to discard duplicated navigation events, we check the Lifecycle
-        if (from.lifecycleIsResumed()) {
-            navController.navigateUp()
-        }
     }
 }
 

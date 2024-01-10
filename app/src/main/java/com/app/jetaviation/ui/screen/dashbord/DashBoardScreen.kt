@@ -1,10 +1,7 @@
-package com.app.jetaviation.ui.screen
+package com.app.jetaviation.ui.screen.dashbord
 
-import android.content.Context
-import android.content.ContextWrapper
-import android.os.Build
 import android.text.TextUtils
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -32,8 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,11 +39,11 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +54,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -68,7 +62,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentManager
 import com.app.jetaviation.R
 import com.app.jetaviation.ui.Constants.cityList
 import com.app.jetaviation.ui.Constants.gradientColors
@@ -83,12 +76,12 @@ import com.app.jetaviation.ui.theme.Teal_cl
 import com.app.jetaviation.ui.theme.White_cl_30
 import com.app.jetaviation.ui.theme.White_cl_90
 import com.app.jetaviation.ui.theme.Yellow_cl
-import com.google.android.material.datepicker.MaterialDatePicker
-import java.time.Instant
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardScreen() {
+fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit) {
     val modalBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
@@ -107,7 +100,6 @@ fun DashBoardScreen() {
     var isSource by remember {
         mutableStateOf(true)
     }
-
     var destinationText by remember {
         mutableStateOf("")
     }
@@ -116,7 +108,13 @@ fun DashBoardScreen() {
         mutableStateOf("")
     }
 
-    
+    var currentTime = System.currentTimeMillis()
+
+
+    var travelDate by remember {
+        mutableLongStateOf(currentTime)
+    }
+
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -154,29 +152,41 @@ fun DashBoardScreen() {
                 },
 
                 sourceText,
-                destinationText
+                destinationText,
+                Formater(travelDate)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    navigateFlightList(sourceText, destinationText, travelDate)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
                     .background(
-                        brush =if (TextUtils.isEmpty(sourceText)&&TextUtils.isEmpty(destinationText)) Brush.verticalGradient(colors = listOf(Card_cl,Card_cl)) else Brush.verticalGradient(colors = gradientColors),
+                        brush = if (TextUtils.isEmpty(sourceText) && TextUtils.isEmpty(
+                                destinationText
+                            )
+                        ) Brush.verticalGradient(
+                            colors = listOf(
+                                Card_cl,
+                                Card_cl
+                            )
+                        ) else Brush.verticalGradient(colors = gradientColors),
                         shape = RoundedCornerShape(16.dp)
                     ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
+                enabled = !TextUtils.isEmpty(sourceText) && !TextUtils.isEmpty(destinationText),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     "Search Flights",
                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                    color = if (TextUtils.isEmpty(sourceText)&&TextUtils.isEmpty(sourceText)) White_cl_30 else Color.Black,
+                    color = if (TextUtils.isEmpty(sourceText) && TextUtils.isEmpty(sourceText)) White_cl_30 else Color.Black,
                     fontSize = 16.sp,
                 )
             }
@@ -351,6 +361,7 @@ fun DashBoardScreen() {
             Spacer(modifier = Modifier.height(20.dp))
 
         }
+
         Spacer(modifier = Modifier.height(20.dp))
 
         Image(
@@ -538,59 +549,17 @@ fun DashBoardScreen() {
     }
     if (isOpenDate) {
 
+        SimpleDatePickerInDatePickerDialog(travelDate) { date ->
+            isOpenDate = false
+            travelDate = date
+        }
 
-
-      /*  DatePicker(
-            modifier = Modifier.padding(16.dp).background(color = Card_cl),
-            state = datePickerState,
-            dateValidator = { timestamp ->
-                // Disable all the days before today
-                timestamp > Instant.now().toEpochMilli()
-            },
-            title = {
-                Text(
-                    text = "Pick a date")
-            },
-            headline = {
-                // You need to look the datePickerState value
-                Text(
-                    text = datePickerState.displayMode.toString()
-                )
-            },
-
-            showModeToggle = true, // allow input mode or picker
-            colors = DatePickerDefaults.colors(
-                containerColor = Card_cl,
-                titleContentColor = White_cl_90,
-//                headlineContentColor =,
-//                weekdayContentColor =,
-                subheadContentColor =Card_cl,
-//                yearContentColor =,
-//                currentYearContentColor =,
-//                selectedYearContentColor =,
-//                selectedYearContainerColor =,
-//                dayContentColor =,
-//                disabledDayContentColor =,
-//                selectedDayContentColor =,
-//                disabledSelectedDayContentColor =,
-//                selectedDayContainerColor =,
-//                disabledSelectedDayContainerColor =,
-//                todayContentColor =,
-//                todayDateBorderColor =,
-//                dayInSelectionRangeContentColor =,
-//                dayInSelectionRangeContainerColor =
-            ), // Many colors, you can decide!
-        )*/
-
-        val supportFragmentManager =
-            LocalContext.current.findActivity().supportFragmentManager
-        showTakeawayDatePicker(supportFragmentManager)
     }
 }
 
 
 @Composable
-fun cityItem(item: citys, click: (source: String) -> Unit) {
+fun cityItem(item: DataCities, click: (source: String) -> Unit) {
 
 
     Row(
@@ -638,7 +607,6 @@ fun cityItem(item: citys, click: (source: String) -> Unit) {
 
 }
 
-data class citys(var name: String, var location: String, var shortName: String)
 
 @Composable
 fun mainSelection(
@@ -646,13 +614,16 @@ fun mainSelection(
     navigateDestCity: () -> Unit = {},
     navigateDate: () -> Unit = {},
     sourceText: String,
-    destinationText: String
+    destinationText: String,
+    travelDate: String
 ) {
 
     val titles = listOf("Oneway", "Round Trip", "Multi-City")
     var tabIndex by remember { mutableIntStateOf(0) }
     var radioSelect by remember { mutableStateOf(false) }
-
+    var isRoundTrip by remember {
+        mutableStateOf(false)
+    }
 
     Box {
 
@@ -683,7 +654,17 @@ fun mainSelection(
                         )
                     },
                     selected = tabIndex == index,
-                    onClick = { tabIndex = index },
+                    onClick = {
+                        tabIndex = index
+                        if (tabIndex == 1) {
+                            isRoundTrip = true
+                        }
+                        else{
+                            isRoundTrip = false
+
+                        }
+                        Log.d("mainSelection: ", " " + tabIndex)
+                    },
 
 
                     )
@@ -770,7 +751,9 @@ fun mainSelection(
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
 
-                Column(modifier = Modifier.weight(1f).clickable { navigateDate() }) {
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .clickable { navigateDate() }) {
                     Text(
                         "TRAVEL DATE",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
@@ -778,13 +761,18 @@ fun mainSelection(
                         color = White_cl_30
                     )
                     Text(
-                        "Sun, 4 Oct",
+                        travelDate,
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                         color = White_cl_90
                     )
 
                 }
-                Column(modifier = Modifier.weight(1f)) {
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        if (isRoundTrip)
+                            navigateDate()
+                    }) {
                     Text(
                         "RETURN",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
@@ -795,7 +783,7 @@ fun mainSelection(
                     Text(
                         "Select Date",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                        color = White_cl_90,
+                        color = if (isRoundTrip) White_cl_90 else White_cl_30,
                         modifier = Modifier.align(alignment = Alignment.End)
                     )
 
@@ -920,29 +908,13 @@ fun normalCard(str: String = "hello", color: Color = Orange_cl) {
 @Preview
 @Composable
 fun PreviewScreen() {
-    DashBoardScreen()
+    DashBoardScreen({ _, _, _ -> })
 }
 
+fun Formater(mill: Long): String {
 
-private fun showTakeawayDatePicker(
-
-    supportFragmentManager: FragmentManager,
-
-    ) {
-    val picker = MaterialDatePicker.Builder.datePicker()
-        .setSelection(System.currentTimeMillis())
-        .build()
-    picker.show(supportFragmentManager, picker.toString())
-    picker.addOnPositiveButtonClickListener {
-        picker.selection?.let {
-
-        }
-    }
+    val dateFormatter = SimpleDateFormat.getDateInstance().format(Date(mill))
+    var str = dateFormatter.format("dd mm yyyy")
+    return str
 }
 
-private tailrec fun Context.findActivity(): AppCompatActivity =
-    when (this) {
-        is AppCompatActivity -> this
-        is ContextWrapper -> this.baseContext.findActivity()
-        else -> throw IllegalArgumentException("Could not find activity!")
-    }
