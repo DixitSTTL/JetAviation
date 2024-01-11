@@ -1,6 +1,5 @@
 package com.app.jetaviation.ui.screen.filght
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -55,7 +54,7 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?) {
+fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?, param: () -> Unit) {
 
     var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.NOT_LOADED) }
 
@@ -155,11 +154,7 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?) {
                         }
                         items(Constants.flightList) { item ->
 
-                            flightItem(item) { item ->
-                                Log.d("mvnbvbvnsk", "  " + item.toString())
-
-
-                            }
+                            flightItem(item,param,Modifier.padding(vertical = 6.dp, horizontal = 20.dp))
 
                         }
 
@@ -223,7 +218,7 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?) {
 @Preview
 @Composable
 fun previewFlightListScreen() {
-    FlightListScreen("DEL", "AHM", 1676000000000)
+    FlightListScreen("DEL", "AHM", 1676000000000,{})
 }
 
 @Preview
@@ -239,24 +234,21 @@ fun previewflightItem() {
         img = R.drawable.img_ua
     )
 
-    flightItem(data) { item ->
-
-    }
+    flightItem(data,{},Modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun flightItem(item: DataFlights, click: (source: DataFlights) -> Unit) {
+fun flightItem(item: DataFlights, click: () -> Unit,modifier: Modifier) {
 
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Card_cl
         ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp, horizontal = 20.dp),
+        modifier = modifier
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        onClick = { click(item) }
+        onClick = { click() }
     ) {
 
         Column(

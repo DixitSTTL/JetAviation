@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.app.jetaviation.R
 import com.app.jetaviation.ui.screen.dashbord.DataCities
 import com.app.jetaviation.ui.screen.filght.DataFlights
+import com.app.jetaviation.ui.screen.trips.DataTrips
 
 object Constants {
 
@@ -60,7 +61,84 @@ object Constants {
         ),
     )
 
-    enum class enumIsLoaded{
+
+    val tripList = listOf(
+        DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),DataTrips(
+            sourceShort = "DEL",
+            destinationShort = "JFK",
+
+            sorceLocation = "New Delhi",
+            destinationLocation = "John F. Kennedy, NY",
+
+            takeOffTime = "23:45, Thu 15 Oct",
+            landingTime = "4:30, Fri 16 Oct",
+
+            sourceTerminal = "Terminal 3",
+            destinationTerminal = "Terminal 2",
+        ),
+    )
+
+    enum class enumIsLoaded {
         NOT_LOADED,
         LOADING,
         LOADED

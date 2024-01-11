@@ -81,7 +81,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit) {
+fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
     val modalBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )

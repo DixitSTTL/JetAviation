@@ -16,7 +16,9 @@
 
 package com.app.jetaviation
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +34,15 @@ import androidx.navigation.navArgument
 import com.app.jetaviation.MainDestinations.DATE_KEY
 import com.app.jetaviation.MainDestinations.DESTINATION_KEY
 import com.app.jetaviation.MainDestinations.SOURCE_KEY
+import com.app.jetaviation.ui.JsonNavType
 import com.app.jetaviation.ui.screen.dashbord.DashBoardScreen
+import com.app.jetaviation.ui.screen.filght.DataFlights
 import com.app.jetaviation.ui.screen.filght.FlightListScreen
+import com.app.jetaviation.ui.screen.flight_detail.FlightDetailScreen
 import com.app.jetaviation.ui.screen.trips.TripScreen
+import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
@@ -62,7 +69,7 @@ fun NavGraph(
             }
 
             DashBoardScreen { source, dest, date ->
-                actions.navigateFlightList(source, dest,date)
+                actions.navigateFlightList(source, dest, date)
             }
         }
 
@@ -86,8 +93,15 @@ fun NavGraph(
             val DESTINATION_KEY = arguments.getString(DESTINATION_KEY)
             val DATE_KEY = arguments.getLong(DATE_KEY)
 
+            FlightListScreen(SOURCE_KEY, DESTINATION_KEY, DATE_KEY) {
+                actions.navigateFlightDetail()
+            }
 
-            FlightListScreen(SOURCE_KEY,DESTINATION_KEY,DATE_KEY)
+        }
+
+        composable(MainDestinations.FLIGHT_DETAIL) { backStackEntry: NavBackStackEntry ->
+
+            FlightDetailScreen()
         }
 
     }
@@ -96,12 +110,14 @@ fun NavGraph(
 object MainDestinations {
     const val ONBOARDING_ROUTE = "onboarding"
     const val COURSE_DETAIL_ROUTE = "course"
+    const val FLIGHT_DETAIL = "flight_detail"
     const val FLIGHT_LIST = "flight_list"
 
 
     const val SOURCE_KEY = "source_key"
     const val DESTINATION_KEY = "destination_key"
     const val DATE_KEY = "date_key"
+    const val DATA_FLIGHTS_KEY = "data_flights_key"
 }
 
 /**
@@ -112,10 +128,17 @@ class MainActions(navController: NavHostController) {
         navController.popBackStack()
     }
 
-    // Used from COURSES_ROUTE
-    val navigateFlightList = { source: String, destination: String , date: Long ->
+    // Used from FLIGHT_LIST
+    val navigateFlightList = { source: String, destination: String, date: Long ->
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate("${MainDestinations.FLIGHT_LIST}/$source/$destination/$date")
+
+    }
+
+    // Used from FLIGHT_DETAIL
+    val navigateFlightDetail = {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        navController.navigate(MainDestinations.FLIGHT_DETAIL)
 
     }
 }
@@ -132,3 +155,15 @@ object TabDestinations {
  */
 private fun NavBackStackEntry.lifecycleIsResumed() =
     this.lifecycle.currentState == Lifecycle.State.RESUMED
+
+class ProfileArgType : JsonNavType<DataFlights>() {
+    override fun fromJsonParse(value: String): DataFlights {
+        return Gson().fromJson(value, DataFlights::class.java)
+    }
+
+    override fun DataFlights.getJsonParse(): String {
+
+        return Gson().toJson(this)
+    }
+
+}
