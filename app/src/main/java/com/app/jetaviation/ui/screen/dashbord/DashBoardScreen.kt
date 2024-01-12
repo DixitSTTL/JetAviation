@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -81,7 +82,7 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
+fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) {
     val modalBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
@@ -95,6 +96,10 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
     }
 
     var sourceText by remember {
+        mutableStateOf("")
+    }
+
+    var classText by remember {
         mutableStateOf("")
     }
     var isSource by remember {
@@ -150,43 +155,53 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
                 navigateDate = {
                     isOpenDate = true
                 },
-
-                sourceText,
-                destinationText,
-                Formater(travelDate)
+                sourceText = sourceText,
+                destinationText = destinationText,
+                classText = classText,
+                travelDate = Formater(travelDate),
+                selectClass = { data ->
+                    classText = data
+                },
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = {
-                    navigateFlightList(sourceText, destinationText, travelDate)
+                    navigateFlightList(sourceText, destinationText, travelDate, classText)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
                     .background(
-                        brush = if (TextUtils.isEmpty(sourceText) && TextUtils.isEmpty(
-                                destinationText
-                            )
-                        ) Brush.verticalGradient(
-                            colors = listOf(
+                        brush = Brush.verticalGradient(
+                            colors = if (Validation(
+                                    sourceText,
+                                    destinationText,
+                                    classText
+                                )
+                            ) gradientColors else listOf(
                                 Card_cl,
                                 Card_cl
                             )
-                        ) else Brush.verticalGradient(colors = gradientColors),
+                        ),
                         shape = RoundedCornerShape(16.dp)
                     ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
-                enabled = !TextUtils.isEmpty(sourceText) && !TextUtils.isEmpty(destinationText),
+                enabled = Validation(sourceText, destinationText, classText),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     "Search Flights",
                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                    color = if (TextUtils.isEmpty(sourceText) && TextUtils.isEmpty(sourceText)) White_cl_30 else Color.Black,
+                    color = if (Validation(
+                            sourceText,
+                            destinationText,
+                            classText
+                        )
+                    ) Color.Black else White_cl_30,
                     fontSize = 16.sp,
                 )
             }
@@ -544,7 +559,7 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
             },
             sheetState = modalBottomSheetState,
             dragHandle = { BottomSheetDefaults.DragHandle() },
-            containerColor = Card_cl
+            containerColor = Surface_cl
         )
     }
     if (isOpenDate) {
@@ -555,6 +570,19 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long) -> Unit,) {
         }
 
     }
+}
+
+fun Validation(sourceText: String, destinationText: String, classText: String): Boolean {
+
+    if (TextUtils.isEmpty(sourceText))
+        return false
+    if (TextUtils.isEmpty(destinationText))
+        return false
+    if (TextUtils.isEmpty(classText))
+        return false
+
+
+    return true
 }
 
 
@@ -615,13 +643,19 @@ fun mainSelection(
     navigateDate: () -> Unit = {},
     sourceText: String,
     destinationText: String,
-    travelDate: String
+    travelDate: String,
+    classText: String,
+    selectClass: (String) -> Unit = {}
 ) {
 
     val titles = listOf("Oneway", "Round Trip", "Multi-City")
     var tabIndex by remember { mutableIntStateOf(0) }
     var radioSelect by remember { mutableStateOf(false) }
     var isRoundTrip by remember {
+        mutableStateOf(false)
+    }
+
+    var isOpenClass by remember {
         mutableStateOf(false)
     }
 
@@ -658,8 +692,7 @@ fun mainSelection(
                         tabIndex = index
                         if (tabIndex == 1) {
                             isRoundTrip = true
-                        }
-                        else{
+                        } else {
                             isRoundTrip = false
 
                         }
@@ -826,7 +859,11 @@ fun mainSelection(
                         .align(alignment = Alignment.CenterVertically)
                 )
 
-                Column(modifier = Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable(onClick = { isOpenClass = !isOpenClass })
+                ) {
                     Text(
                         "CLASS",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
@@ -835,7 +872,7 @@ fun mainSelection(
                         modifier = Modifier.align(alignment = Alignment.End)
                     )
                     Text(
-                        "Economy",
+                        if (classText.length > 0) classText else "Select Class",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                         color = White_cl_90,
                         modifier = Modifier.align(alignment = Alignment.End)
@@ -843,6 +880,71 @@ fun mainSelection(
 
                 }
             }
+
+            AnimatedVisibility(visible = isOpenClass) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Button(
+                        onClick = {
+                            isOpenClass = false
+                            selectClass("Economy")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Green_cl
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(
+                            "Economy",
+                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            isOpenClass = false
+                            selectClass("Business")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Green_cl
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(
+                            "Business",
+                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            isOpenClass = false
+                            selectClass("First Class")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Green_cl
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Text(
+                            "First Class",
+                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                            color = Color.Black,
+                            fontSize = 12.sp,
+                        )
+                    }
+
+
+                }
+            }
+
 
             Spacer(
                 modifier = Modifier
@@ -908,7 +1010,7 @@ fun normalCard(str: String = "hello", color: Color = Orange_cl) {
 @Preview
 @Composable
 fun PreviewScreen() {
-    DashBoardScreen({ _, _, _ -> })
+    DashBoardScreen { _, _, _, _ -> }
 }
 
 fun Formater(mill: Long): String {

@@ -1,5 +1,6 @@
 package com.app.jetaviation
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -33,31 +34,35 @@ import com.app.jetaviation.ui.theme.Surface_cl
 
 @Composable
 
-fun AviationApp(finishActivity: () -> Unit) {
+fun AviationApp(applicationContext: Context, finishActivity: () -> Unit) {
+
+
     JetAviationTheme {
         val tabs = remember { AppTabs.values() }
         val navController = rememberNavController()
-        Scaffold(
-            contentColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                BottomBar(navController = navController, tabs)
-            }
+        Scaffold(contentColor = MaterialTheme.colorScheme.background, bottomBar = {
+            BottomBar(navController = navController, tabs)
+        }
+
         ) { innerPaddingModifier ->
             NavGraph(
                 finishActivity = finishActivity,
                 navController = navController,
-                modifier = Modifier.padding(innerPaddingModifier)
+                modifier = Modifier.padding(innerPaddingModifier),
+                applicationContext = applicationContext
             )
         }
     }
 }
 
 enum class AppTabs(
-    @StringRes val title: Int,
-    @DrawableRes val icon: Int,
-    val route: String
+    @StringRes val title: Int, @DrawableRes val icon: Int, val route: String
 ) {
-    FLIGHTS(R.string.flight, R.drawable.ic_flight, TabDestinations.FLIGHT_ROUTE),
+    FLIGHTS(
+        R.string.flight,
+        R.drawable.ic_flight,
+        TabDestinations.FLIGHT_ROUTE
+    ),
     TRIPS(R.string.trip, R.drawable.ic_trips, TabDestinations.TRIPS_ROUTE),
 }
 
@@ -65,8 +70,7 @@ enum class AppTabs(
 @Composable
 fun BottomBar(navController: NavController, tabs: Array<AppTabs>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-        ?: AppTabs.FLIGHTS.route
+    val currentRoute = navBackStackEntry?.destination?.route ?: AppTabs.FLIGHTS.route
 
     val routes = remember { AppTabs.values().map { it.route } }
     if (currentRoute in routes) {
@@ -75,61 +79,53 @@ fun BottomBar(navController: NavController, tabs: Array<AppTabs>) {
 
             tabs.forEach { tab ->
 
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(tab.icon),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .graphicsLayer(alpha = 0.99f)
-                                .drawWithCache {
-                                    onDrawWithContent {
-                                        drawContent()
-                                        drawRect(
-                                            brush = Brush.linearGradient(
-                                                colors = if (currentRoute == tab.route) gradientColors else gradientWhiteColors,
-                                                tileMode = TileMode.Mirror
-                                            ),
-                                            blendMode = BlendMode.SrcAtop
-                                        )
-                                    }
-                                },
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(tab.title),
-                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                            modifier = Modifier
-                                .graphicsLayer(alpha = 0.99f)
-                                .drawWithCache {
-                                    onDrawWithContent {
-                                        drawContent()
-                                        drawRect(
-                                            brush = Brush.linearGradient(
-                                                colors = if (currentRoute == tab.route) gradientColors else gradientWhiteColors,
-                                                tileMode = TileMode.Mirror
-                                            ),
-                                            blendMode = BlendMode.SrcAtop
-                                        )
-                                    }
-                                },
-                        )
-                    },
-                    selected = currentRoute == tab.route,
-                    onClick = {
-                        if (tab.route != currentRoute) {
-                            navController.navigate(tab.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
+                NavigationBarItem(icon = {
+                    Icon(
+                        painter = painterResource(tab.icon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .graphicsLayer(alpha = 0.99f)
+                            .drawWithCache {
+                                onDrawWithContent {
+                                    drawContent()
+                                    drawRect(
+                                        brush = Brush.linearGradient(
+                                            colors = if (currentRoute == tab.route) gradientColors else gradientWhiteColors,
+                                            tileMode = TileMode.Mirror
+                                        ), blendMode = BlendMode.SrcAtop
+                                    )
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+                            },
+                    )
+                }, label = {
+                    Text(
+                        text = stringResource(tab.title),
+                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                        modifier = Modifier
+                            .graphicsLayer(alpha = 0.99f)
+                            .drawWithCache {
+                                onDrawWithContent {
+                                    drawContent()
+                                    drawRect(
+                                        brush = Brush.linearGradient(
+                                            colors = if (currentRoute == tab.route) gradientColors else gradientWhiteColors,
+                                            tileMode = TileMode.Mirror
+                                        ), blendMode = BlendMode.SrcAtop
+                                    )
+                                }
+                            },
+                    )
+                }, selected = currentRoute == tab.route, onClick = {
+                    if (tab.route != currentRoute) {
+                        navController.navigate(tab.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                    },
-                    alwaysShowLabel = false,
-                    modifier = Modifier.navigationBarsPadding()
+                    }
+                }, alwaysShowLabel = false, modifier = Modifier.navigationBarsPadding()
                 )
             }
         }

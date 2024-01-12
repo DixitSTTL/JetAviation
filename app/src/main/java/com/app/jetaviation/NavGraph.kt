@@ -16,6 +16,7 @@
 
 package com.app.jetaviation
 
+import android.content.Context
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
@@ -31,6 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.app.jetaviation.MainDestinations.CLASS_KEY
 import com.app.jetaviation.MainDestinations.DATE_KEY
 import com.app.jetaviation.MainDestinations.DESTINATION_KEY
 import com.app.jetaviation.MainDestinations.SOURCE_KEY
@@ -42,14 +44,14 @@ import com.app.jetaviation.ui.screen.flight_detail.FlightDetailScreen
 import com.app.jetaviation.ui.screen.trips.TripScreen
 import com.google.gson.Gson
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
     finishActivity: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
     startDestination: String = AppTabs.FLIGHTS.route,
-    showOnboardingInitially: Boolean = true
+    showOnboardingInitially: Boolean = true,
+    applicationContext: Context
 ) {
     // Onboarding could be read from shared preferences.
     val onboardingComplete = remember(showOnboardingInitially) {
@@ -68,8 +70,8 @@ fun NavGraph(
                 finishActivity()
             }
 
-            DashBoardScreen { source, dest, date ->
-                actions.navigateFlightList(source, dest, date)
+            DashBoardScreen { source, dest, date,tripClass ->
+                actions.navigateFlightList(source, dest, date,tripClass)
             }
         }
 
@@ -80,11 +82,12 @@ fun NavGraph(
             TripScreen()
         }
 
-        composable("${MainDestinations.FLIGHT_LIST}/{$SOURCE_KEY}/{$DESTINATION_KEY}/{$DATE_KEY}",
+        composable("${MainDestinations.FLIGHT_LIST}/{$SOURCE_KEY}/{$DESTINATION_KEY}/{$DATE_KEY}/{$CLASS_KEY}",
             arguments = listOf(
                 navArgument(SOURCE_KEY) { type = NavType.StringType },
                 navArgument(DESTINATION_KEY) { type = NavType.StringType },
-                navArgument(DATE_KEY) { type = NavType.LongType }
+                navArgument(DATE_KEY) { type = NavType.LongType },
+                navArgument(CLASS_KEY) { type = NavType.StringType }
             )
         ) { backStackEntry: NavBackStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
@@ -92,8 +95,9 @@ fun NavGraph(
             val SOURCE_KEY = arguments.getString(SOURCE_KEY)
             val DESTINATION_KEY = arguments.getString(DESTINATION_KEY)
             val DATE_KEY = arguments.getLong(DATE_KEY)
+            val CLASS_KEY = arguments.getString(CLASS_KEY)
 
-            FlightListScreen(SOURCE_KEY, DESTINATION_KEY, DATE_KEY) {
+            FlightListScreen(SOURCE_KEY, DESTINATION_KEY, DATE_KEY,CLASS_KEY) {
                 actions.navigateFlightDetail()
             }
 
@@ -101,7 +105,9 @@ fun NavGraph(
 
         composable(MainDestinations.FLIGHT_DETAIL) { backStackEntry: NavBackStackEntry ->
 
-            FlightDetailScreen()
+            FlightDetailScreen {
+                actions.navigateBack()
+            }
         }
 
     }
@@ -117,6 +123,7 @@ object MainDestinations {
     const val SOURCE_KEY = "source_key"
     const val DESTINATION_KEY = "destination_key"
     const val DATE_KEY = "date_key"
+    const val CLASS_KEY = "class_key"
     const val DATA_FLIGHTS_KEY = "data_flights_key"
 }
 
@@ -124,14 +131,14 @@ object MainDestinations {
  * Models the navigation actions in the app.
  */
 class MainActions(navController: NavHostController) {
-    val onboardingComplete: () -> Unit = {
+    val navigateBack: () -> Unit = {
         navController.popBackStack()
     }
 
     // Used from FLIGHT_LIST
-    val navigateFlightList = { source: String, destination: String, date: Long ->
+    val navigateFlightList = { source: String, destination: String, date: Long, tripClass: String->
         // In order to discard duplicated navigation events, we check the Lifecycle
-        navController.navigate("${MainDestinations.FLIGHT_LIST}/$source/$destination/$date")
+        navController.navigate("${MainDestinations.FLIGHT_LIST}/$source/$destination/$date/$tripClass")
 
     }
 

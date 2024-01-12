@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -54,7 +58,7 @@ import kotlinx.coroutines.delay
 
 
 @Composable
-fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?, param: () -> Unit) {
+fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: String?, param: () -> Unit) {
 
     var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.NOT_LOADED) }
 
@@ -125,19 +129,42 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?, param: 
                         textAlign = TextAlign.Start
                     )
                 }
-
-                Text(
-                    Formater(DATE!!),
-                    fontFamily = FontFamily(Font(R.font.rubik_light)),
-                    style = TextStyle(
-                        color = White_cl_90,
-                        fontSize = 12.sp
-                    ),
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        .padding(vertical = 4.dp)
                         .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 4.dp),
-                    textAlign = TextAlign.End
-                )
+                ) {
+                    Text(
+                        Formater(DATE!!),
+                        fontFamily = FontFamily(Font(R.font.rubik_regular)),
+                        style = TextStyle(
+                            color = White_cl_30,
+                            fontSize = 12.sp
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        textAlign = TextAlign.End
+                    )
+
+                    Spacer(modifier = Modifier
+                        .size(10.dp)
+                        .padding(3.dp)
+                        .clip(CircleShape)
+                        .background(White_cl_30))
+
+                    Text(
+                        CLASS!!,
+                        fontFamily = FontFamily(Font(R.font.rubik_regular)),
+                        style = TextStyle(
+                            color = White_cl_30,
+                            fontSize = 12.sp
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                        ,
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -218,7 +245,7 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?, param: 
 @Preview
 @Composable
 fun previewFlightListScreen() {
-    FlightListScreen("DEL", "AHM", 1676000000000,{})
+    FlightListScreen("DEL", "AHM", 1676000000000,"Economy",{})
 }
 
 @Preview
@@ -332,7 +359,6 @@ fun flightItem(item: DataFlights, click: () -> Unit,modifier: Modifier) {
                         color = White_cl_90
                     )
                 )
-
 
             }
 

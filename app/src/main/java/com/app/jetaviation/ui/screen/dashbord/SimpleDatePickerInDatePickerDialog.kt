@@ -12,8 +12,12 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.jetaviation.ui.theme.Card_cl
+import com.app.jetaviation.ui.theme.Green_cl
+import com.app.jetaviation.ui.theme.Surface_cl
+import com.app.jetaviation.ui.theme.Yellow_cl
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,14 +87,14 @@ fun SimpleDatePickerInDatePickerDialog(
 //            currentYearContentColor =,
 //            selectedYearContentColor =,
 //            selectedYearContainerColor =,
-//            dayContentColor =,
+//            dayContentColor = ,
 //            disabledDayContentColor =,
-//            selectedDayContentColor =,
+            selectedDayContentColor = Surface_cl,
 //            disabledSelectedDayContentColor =,
 //            selectedDayContainerColor =,
 //            disabledSelectedDayContainerColor =,
-//            todayContentColor =,
-//            todayDateBorderColor =,
+            todayContentColor = Green_cl,
+            todayDateBorderColor =Green_cl,
 //            dayInSelectionRangeContentColor =,
 //            dayInSelectionRangeContainerColor =
                 ), // Many colors, you can decide!
@@ -103,7 +107,7 @@ fun SimpleDatePickerInDatePickerDialog(
 
         sheetState = modalBottomSheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() },
-        containerColor = Card_cl
+        containerColor = Surface_cl
     )
 
 
