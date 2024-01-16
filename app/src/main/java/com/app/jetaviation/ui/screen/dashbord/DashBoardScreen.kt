@@ -1,7 +1,6 @@
 package com.app.jetaviation.ui.screen.dashbord
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -64,6 +63,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.jetaviation.R
+import com.app.jetaviation.ui.Constants
 import com.app.jetaviation.ui.Constants.cityList
 import com.app.jetaviation.ui.Constants.gradientColors
 import com.app.jetaviation.ui.Constants.gradientWhiteColors
@@ -91,7 +91,11 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
         mutableStateOf(false)
     }
 
-    var isOpenDate by remember {
+    var isOpenTraDate by remember {
+        mutableStateOf(false)
+    }
+
+    var isOpenReturnDate by remember {
         mutableStateOf(false)
     }
 
@@ -102,9 +106,11 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
     var classText by remember {
         mutableStateOf("")
     }
+
     var isSource by remember {
         mutableStateOf(true)
     }
+
     var destinationText by remember {
         mutableStateOf("")
     }
@@ -117,6 +123,9 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
 
 
     var travelDate by remember {
+        mutableLongStateOf(currentTime)
+    }
+    var returnDate by remember {
         mutableLongStateOf(currentTime)
     }
 
@@ -152,13 +161,19 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
                     isSource = false
                 },
 
-                navigateDate = {
-                    isOpenDate = true
+                navigateTraDate = {
+                    isOpenTraDate = true
                 },
+
+                navigateReturnDate = {
+                    isOpenReturnDate = true
+                },
+
                 sourceText = sourceText,
                 destinationText = destinationText,
                 classText = classText,
                 travelDate = Formater(travelDate),
+                returnDate = Formater(returnDate),
                 selectClass = { data ->
                     classText = data
                 },
@@ -417,7 +432,10 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
                                 .fillMaxWidth()
                                 .weight(1f)
                                 .padding(end = 12.dp)
-                                .align(alignment = Alignment.CenterVertically),
+                                .align(alignment = Alignment.CenterVertically)
+                                .clickable {
+                                    isSource = true
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -457,7 +475,10 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
                                 .fillMaxWidth()
                                 .weight(1f)
                                 .padding(start = 12.dp)
-                                .align(alignment = Alignment.CenterVertically),
+                                .align(alignment = Alignment.CenterVertically)
+                                .clickable {
+                                    isSource = false
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally
 
                         ) {
@@ -562,11 +583,27 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
             containerColor = Surface_cl
         )
     }
-    if (isOpenDate) {
+    if (isOpenTraDate) {
 
-        SimpleDatePickerInDatePickerDialog(travelDate) { date ->
-            isOpenDate = false
+        SimpleDatePickerInDatePickerDialog(
+            titleText = "TRAVEL DATE",
+            travelDate = travelDate,
+            isValidationReq = Constants.DateValidation.FUTURE_DATE
+        ) { date ->
+            isOpenTraDate = false
             travelDate = date
+        }
+
+    }
+    if (isOpenReturnDate) {
+
+        SimpleDatePickerInDatePickerDialog(
+            titleText = "RETURN DATE",
+            travelDate = returnDate,
+            isValidationReq = Constants.DateValidation.FUTURE_DATE
+        ) { date ->
+            isOpenReturnDate = false
+            returnDate = date
         }
 
     }
@@ -640,10 +677,12 @@ fun cityItem(item: DataCities, click: (source: String) -> Unit) {
 fun mainSelection(
     navigateSourceCity: () -> Unit = {},
     navigateDestCity: () -> Unit = {},
-    navigateDate: () -> Unit = {},
+    navigateTraDate: () -> Unit = {},
+    navigateReturnDate: () -> Unit = {},
     sourceText: String,
     destinationText: String,
     travelDate: String,
+    returnDate: String,
     classText: String,
     selectClass: (String) -> Unit = {}
 ) {
@@ -684,7 +723,10 @@ fun mainSelection(
                                 brush = Brush.linearGradient(
                                     colors = if (tabIndex == index) gradientColors else gradientWhiteColors
                                 )
-                            )
+                            ),
+                            modifier = Modifier
+                                .height(80.dp)
+                                .align(Alignment.TopCenter)
                         )
                     },
                     selected = tabIndex == index,
@@ -696,11 +738,9 @@ fun mainSelection(
                             isRoundTrip = false
 
                         }
-                        Log.d("mainSelection: ", " " + tabIndex)
                     },
-
-
-                    )
+                    modifier = Modifier.height(100.dp)
+                )
             }
         }
 
@@ -710,7 +750,7 @@ fun mainSelection(
                 contentColor = Card_cl,
             ),
             border = BorderStroke(width = 3.dp, color = MaterialTheme.colorScheme.background),
-            modifier = Modifier.padding(top = 40.dp),
+            modifier = Modifier.padding(top = 50.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 0.dp
@@ -786,7 +826,7 @@ fun mainSelection(
 
                 Column(modifier = Modifier
                     .weight(1f)
-                    .clickable { navigateDate() }) {
+                    .clickable { navigateTraDate() }) {
                     Text(
                         "TRAVEL DATE",
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
@@ -804,7 +844,7 @@ fun mainSelection(
                     .weight(1f)
                     .clickable {
                         if (isRoundTrip)
-                            navigateDate()
+                            navigateReturnDate()
                     }) {
                     Text(
                         "RETURN",
@@ -814,7 +854,7 @@ fun mainSelection(
                         modifier = Modifier.align(alignment = Alignment.End)
                     )
                     Text(
-                        "Select Date",
+                        returnDate,
                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                         color = if (isRoundTrip) White_cl_90 else White_cl_30,
                         modifier = Modifier.align(alignment = Alignment.End)

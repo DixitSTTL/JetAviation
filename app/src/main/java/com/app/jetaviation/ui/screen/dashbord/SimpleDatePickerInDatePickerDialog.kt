@@ -12,17 +12,17 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.app.jetaviation.ui.theme.Card_cl
+import com.app.jetaviation.ui.Constants
 import com.app.jetaviation.ui.theme.Green_cl
 import com.app.jetaviation.ui.theme.Surface_cl
-import com.app.jetaviation.ui.theme.Yellow_cl
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun SimpleDatePickerInDatePickerDialog(
+    titleText: String,
     travelDate: Long,
+    isValidationReq: Constants.DateValidation,
     onDismiss: (date: Long) -> Unit
 ) {
 
@@ -59,14 +59,30 @@ fun SimpleDatePickerInDatePickerDialog(
             DatePicker(
                 modifier = Modifier.padding(16.dp),
                 state = datePickerState,
+
                 dateValidator = { timestamp ->
-                    // Disable all the days before today
-                    timestamp > System.currentTimeMillis()
+
+                    when (isValidationReq) {
+
+                        Constants.DateValidation.FUTURE_DATE -> {
+                            timestamp > System.currentTimeMillis()
+                        }
+
+                        Constants.DateValidation.PAST_DATE -> {
+                            timestamp < System.currentTimeMillis()
+                        }
+
+                        Constants.DateValidation.NOT_VALIDATION -> {
+                            true
+                        }
+
+                    }
+
                 },
                 title = {
                     Text(
                         modifier = Modifier.padding(datePickerTitlePadding),
-                        text = "Pick a date"
+                        text = titleText
                     )
                 },
                 headline = {
@@ -89,12 +105,12 @@ fun SimpleDatePickerInDatePickerDialog(
 //            selectedYearContainerColor =,
 //            dayContentColor = ,
 //            disabledDayContentColor =,
-            selectedDayContentColor = Surface_cl,
+                    selectedDayContentColor = Surface_cl,
 //            disabledSelectedDayContentColor =,
 //            selectedDayContainerColor =,
 //            disabledSelectedDayContainerColor =,
-            todayContentColor = Green_cl,
-            todayDateBorderColor =Green_cl,
+                    todayContentColor = Green_cl,
+                    todayDateBorderColor = Green_cl,
 //            dayInSelectionRangeContentColor =,
 //            dayInSelectionRangeContainerColor =
                 ), // Many colors, you can decide!

@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -60,72 +61,82 @@ fun TripScreen() {
 
     Scaffold(
         contentColor = MaterialTheme.colorScheme.background,
-    ) {
+        topBar = {
+            Box(Modifier.fillMaxWidth()) {
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
+                TabRow(
+                    selectedTabIndex = tabIndex,
+                    divider = {},
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .width(250.dp)
+                        .align(Alignment.Center)
+                        .clip(
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    containerColor = Card_cl,
+                    contentColor = Card_cl,
+                    indicator = {
+                        Box(
+                            Modifier
+                                .tabIndicatorOffset(it[tabIndex])
+                                .fillMaxSize()
+                                .padding(5.dp)
+                                .background(color = Surface_cl, shape = RoundedCornerShape(12.dp))
+                                .zIndex(-1f)
+                        )
+                    }) {
 
-            TabRow(
-                selectedTabIndex = tabIndex,
-                divider = {},
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .width(250.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .clip(
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                containerColor = Card_cl,
-                contentColor = Card_cl,
-                indicator = {
-                    Box(
-                        Modifier
-                            .tabIndicatorOffset(it[tabIndex])
-                            .fillMaxSize()
-                            .padding(5.dp)
-                            .background(color = Surface_cl, shape = RoundedCornerShape(12.dp))
-                            .zIndex(-1f)
-                    )
-                }) {
-
-                titles.forEachIndexed { index, title ->
-                    Tab(
+                    titles.forEachIndexed { index, title ->
+                        Tab(
 
 
-                        text = {
+                            text = {
 
 
-                            Text(
-                                title,
-                                fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                                color = if (tabIndex == index) Yellow_cl else Color.White,
-                                style = TextStyle(
-                                    brush = Brush.linearGradient(
-                                        colors = if (tabIndex == index) Constants.gradientColors else Constants.gradientWhiteColors
-                                    )
-                                ),
-                                modifier = Modifier
-                                    .background(
-                                        color = Color.Transparent,
-                                        shape = RoundedCornerShape(16.dp)
-                                    )
-                                    .zIndex(2f)
-                                    .padding(vertical = 6.dp)
+                                Text(
+                                    title,
+                                    fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                                    color = if (tabIndex == index) Yellow_cl else Color.White,
+                                    style = TextStyle(
+                                        brush = Brush.linearGradient(
+                                            colors = if (tabIndex == index) Constants.gradientColors else Constants.gradientWhiteColors
+                                        )
+                                    ),
+                                    modifier = Modifier
+                                        .background(
+                                            color = Color.Transparent,
+                                            shape = RoundedCornerShape(16.dp)
+                                        )
+                                        .zIndex(2f)
+                                        .padding(vertical = 6.dp)
 
-                            )
+                                )
 
-                        },
-                        selected = tabIndex == index,
-                        onClick = {
-                            tabIndex = index
+                            },
+                            selected = tabIndex == index,
+                            onClick = {
+                                tabIndex = index
 
-                        },
-                    )
+                            },
+                        )
+                    }
                 }
             }
+        }
+    ) {
 
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 12.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 12.dp)
+            ) {
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                 }

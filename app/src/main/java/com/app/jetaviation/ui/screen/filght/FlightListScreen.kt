@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,17 +16,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,8 +60,16 @@ import com.app.jetaviation.ui.theme.White_cl_90
 import kotlinx.coroutines.delay
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: String?, param: () -> Unit) {
+fun FlightListScreen(
+    SOURCE: String?,
+    DESTINATION: String?,
+    DATE: Long?,
+    CLASS: String?,
+    navigateFlightDetails: () -> Unit,
+    navigateBack: () -> Unit,
+) {
 
     var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.NOT_LOADED) }
 
@@ -82,7 +93,109 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: S
 
         Scaffold(
             contentColor = MaterialTheme.colorScheme.background,
-            topBar = {},
+            topBar = {
+                CenterAlignedTopAppBar(
+                    navigationIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(35.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    navigateBack()
+                                }
+                                .padding(5.dp)
+
+                        )
+                    },
+                    title = {
+                        Column {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(top = 4.dp)
+                            ) {
+
+                                Text(
+                                    SOURCE!!,
+                                    fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                                    style = TextStyle(
+                                        color = White_cl_90
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f)
+                                        .padding(end = 10.dp),
+                                    textAlign = TextAlign.End
+                                )
+
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_flight),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .align(alignment = Alignment.CenterVertically)
+                                        .rotate(45f)
+                                )
+
+                                Text(
+                                    DESTINATION!!,
+                                    fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                                    style = TextStyle(
+                                        color = White_cl_90
+                                    ),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f)
+                                        .padding(start = 10.dp),
+                                    textAlign = TextAlign.Start
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(vertical = 4.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+                                Text(
+                                    Formater(DATE!!),
+                                    fontFamily = FontFamily(Font(R.font.rubik_regular)),
+                                    style = TextStyle(
+                                        color = White_cl_30,
+                                        fontSize = 12.sp
+                                    ),
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically),
+                                    textAlign = TextAlign.End
+                                )
+
+                                Spacer(
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .padding(3.dp)
+                                        .clip(CircleShape)
+                                        .background(White_cl_30)
+                                )
+
+                                Text(
+                                    CLASS!!,
+                                    fontFamily = FontFamily(Font(R.font.rubik_regular)),
+                                    style = TextStyle(
+                                        color = White_cl_30,
+                                        fontSize = 12.sp
+                                    ),
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically),
+                                )
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    )
+                )
+
+
+            },
         ) {
 
             Column(
@@ -90,81 +203,7 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: S
                     .fillMaxSize()
                     .padding(it)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 4.dp)
-                ) {
 
-                    Text(
-                        SOURCE!!,
-                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                        style = TextStyle(
-                            color = White_cl_90
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(end = 10.dp),
-                        textAlign = TextAlign.End
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_flight),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .align(alignment = Alignment.CenterVertically)
-                            .rotate(45f)
-                    )
-
-                    Text(
-                        DESTINATION!!,
-                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                        style = TextStyle(
-                            color = White_cl_90
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(start = 10.dp),
-                        textAlign = TextAlign.Start
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    Text(
-                        Formater(DATE!!),
-                        fontFamily = FontFamily(Font(R.font.rubik_regular)),
-                        style = TextStyle(
-                            color = White_cl_30,
-                            fontSize = 12.sp
-                        ),
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically),
-                        textAlign = TextAlign.End
-                    )
-
-                    Spacer(modifier = Modifier
-                        .size(10.dp)
-                        .padding(3.dp)
-                        .clip(CircleShape)
-                        .background(White_cl_30))
-
-                    Text(
-                        CLASS!!,
-                        fontFamily = FontFamily(Font(R.font.rubik_regular)),
-                        style = TextStyle(
-                            color = White_cl_30,
-                            fontSize = 12.sp
-                        ),
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                        ,
-                    )
-                }
 
                 Spacer(
                     modifier = Modifier
@@ -181,7 +220,11 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: S
                         }
                         items(Constants.flightList) { item ->
 
-                            flightItem(item,param,Modifier.padding(vertical = 6.dp, horizontal = 20.dp))
+                            flightItem(
+                                item,
+                                navigateFlightDetails,
+                                Modifier.padding(vertical = 6.dp, horizontal = 20.dp)
+                            )
 
                         }
 
@@ -245,7 +288,7 @@ fun FlightListScreen(SOURCE: String?, DESTINATION: String?, DATE: Long?,CLASS: S
 @Preview
 @Composable
 fun previewFlightListScreen() {
-    FlightListScreen("DEL", "AHM", 1676000000000,"Economy",{})
+    FlightListScreen("DEL", "AHM", 1676000000000, "Economy", {}, {})
 }
 
 @Preview
@@ -261,12 +304,12 @@ fun previewflightItem() {
         img = R.drawable.img_ua
     )
 
-    flightItem(data,{},Modifier)
+    flightItem(data, {}, Modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun flightItem(item: DataFlights, click: () -> Unit,modifier: Modifier) {
+fun flightItem(item: DataFlights, click: () -> Unit, modifier: Modifier) {
 
     Card(
         colors = CardDefaults.cardColors(

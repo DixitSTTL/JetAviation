@@ -25,12 +25,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,6 +48,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +65,10 @@ import com.app.jetaviation.ui.theme.White_cl_90
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlightDetailScreen(onBackPress: () -> Unit) {
+fun FlightDetailScreen(
+    navigateBack: () -> Unit,
+    navigateTrip: () -> Unit
+) {
     var data = DataFlights(
         sd_name = "DEL - JFK",
         airline = "United Airlines UA 802",
@@ -77,7 +81,7 @@ fun FlightDetailScreen(onBackPress: () -> Unit) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
 
                     Text(
@@ -98,8 +102,9 @@ fun FlightDetailScreen(onBackPress: () -> Unit) {
                             .size(35.dp)
                             .clip(CircleShape)
                             .clickable {
-                                onBackPress()
-                            }.padding(5.dp)
+                                navigateBack()
+                            }
+                            .padding(5.dp)
 
                     )
                 },
@@ -438,6 +443,8 @@ fun FlightDetailScreen(onBackPress: () -> Unit) {
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(18.dp))
+
                 }
 
             }
@@ -485,7 +492,9 @@ fun FlightDetailScreen(onBackPress: () -> Unit) {
                     }
 
                     Button(
-                        onClick = {},
+                        onClick = {
+                            navigateTrip()
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
@@ -608,9 +617,9 @@ fun SampleText2(s1: Int, s: String) {
 
 }
 
-@Preview
+@Preview(device = Devices.PIXEL_3A)
 @Composable
 fun previewFlightDetailScreen() {
-    FlightDetailScreen {}
+    FlightDetailScreen({}, {})
 
 }

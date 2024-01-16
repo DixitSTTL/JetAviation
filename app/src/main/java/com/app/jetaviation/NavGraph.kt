@@ -17,9 +17,7 @@
 package com.app.jetaviation
 
 import android.content.Context
-import android.os.Build
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +39,9 @@ import com.app.jetaviation.ui.screen.dashbord.DashBoardScreen
 import com.app.jetaviation.ui.screen.filght.DataFlights
 import com.app.jetaviation.ui.screen.filght.FlightListScreen
 import com.app.jetaviation.ui.screen.flight_detail.FlightDetailScreen
+import com.app.jetaviation.ui.screen.traveller_detail.CardDetailScreen
+import com.app.jetaviation.ui.screen.traveller_detail.TicketViewScreen
+import com.app.jetaviation.ui.screen.traveller_detail.TravellerDetailScreen
 import com.app.jetaviation.ui.screen.trips.TripScreen
 import com.google.gson.Gson
 
@@ -49,6 +50,7 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     finishActivity: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
+//    startDestination: String = MainDestinations.FLIGHT_DETAIL,
     startDestination: String = AppTabs.FLIGHTS.route,
     showOnboardingInitially: Boolean = true,
     applicationContext: Context
@@ -70,8 +72,8 @@ fun NavGraph(
                 finishActivity()
             }
 
-            DashBoardScreen { source, dest, date,tripClass ->
-                actions.navigateFlightList(source, dest, date,tripClass)
+            DashBoardScreen { source, dest, date, tripClass ->
+                actions.navigateFlightList(source, dest, date, tripClass)
             }
         }
 
@@ -97,17 +99,65 @@ fun NavGraph(
             val DATE_KEY = arguments.getLong(DATE_KEY)
             val CLASS_KEY = arguments.getString(CLASS_KEY)
 
-            FlightListScreen(SOURCE_KEY, DESTINATION_KEY, DATE_KEY,CLASS_KEY) {
-                actions.navigateFlightDetail()
-            }
+            FlightListScreen(
+                SOURCE = SOURCE_KEY,
+                DESTINATION = DESTINATION_KEY,
+                DATE = DATE_KEY,
+                CLASS = CLASS_KEY,
+                navigateFlightDetails = {
+                    actions.navigateFlightDetail()
+                },
+                navigateBack={
+                    actions.navigateBack()
+
+                })
 
         }
 
         composable(MainDestinations.FLIGHT_DETAIL) { backStackEntry: NavBackStackEntry ->
 
-            FlightDetailScreen {
-                actions.navigateBack()
-            }
+            FlightDetailScreen(
+                navigateTrip = {
+                    actions.navigateTripDetail()
+                },
+                navigateBack = {
+                    actions.navigateBack()
+
+                }
+            )
+
+        }
+
+        composable(MainDestinations.TRIP_DETAIL) { backStackEntry: NavBackStackEntry ->
+
+            TravellerDetailScreen(
+                navigateBack = {
+                    actions.navigateBack()
+                },
+                navigateCardDetail = {
+                    actions.navigateCardDetail()
+                })
+
+        }
+
+
+        composable(MainDestinations.CARD_DETAIL) { backStackEntry: NavBackStackEntry ->
+
+            CardDetailScreen(
+                navigateBack = {
+                    actions.navigateBack()
+                },
+                navigateTicketView = {
+                    actions.navigateTicketView()
+                })
+        }
+
+        composable(MainDestinations.TICKET_SCREEN) { backStackEntry: NavBackStackEntry ->
+
+            TicketViewScreen(
+                navigateBack = {
+                    actions.navigateBack()
+                })
         }
 
     }
@@ -118,6 +168,9 @@ object MainDestinations {
     const val COURSE_DETAIL_ROUTE = "course"
     const val FLIGHT_DETAIL = "flight_detail"
     const val FLIGHT_LIST = "flight_list"
+    const val TRIP_DETAIL = "trip_detail"
+    const val CARD_DETAIL = "card_detail"
+    const val TICKET_SCREEN = "ticket_screen"
 
 
     const val SOURCE_KEY = "source_key"
@@ -135,18 +188,32 @@ class MainActions(navController: NavHostController) {
         navController.popBackStack()
     }
 
-    // Used from FLIGHT_LIST
-    val navigateFlightList = { source: String, destination: String, date: Long, tripClass: String->
+    val navigateFlightList = { source: String, destination: String, date: Long, tripClass: String ->
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate("${MainDestinations.FLIGHT_LIST}/$source/$destination/$date/$tripClass")
 
     }
 
-    // Used from FLIGHT_DETAIL
     val navigateFlightDetail = {
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate(MainDestinations.FLIGHT_DETAIL)
 
+    }
+    val navigateCardDetail = {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        navController.navigate(MainDestinations.CARD_DETAIL)
+
+    }
+    val navigateTicketView = {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        navController.navigate(MainDestinations.TICKET_SCREEN)
+
+    }
+
+    // Used from FLIGHT_DETAIL
+    val navigateTripDetail = {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        navController.navigate(MainDestinations.TRIP_DETAIL)
     }
 }
 

@@ -15,7 +15,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
     background = Surface_cl,
-    )
+)
 
 @Composable
 fun JetAviationTheme(

@@ -10,4 +10,4 @@ data class DataTrips(
     var sourceTerminal: String,
     var destinationTerminal: String,
 
-)
+    )
