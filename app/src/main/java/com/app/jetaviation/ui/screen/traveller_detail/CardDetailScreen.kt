@@ -66,116 +66,104 @@ fun CardDetailScreen(navigateBack: () -> Unit, navigateTicketView: () -> Unit) {
         mutableStateOf(false)
     }
 
-    Scaffold(
-        containerColor = Surface_cl,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
+    Scaffold(containerColor = Surface_cl, topBar = {
+        CenterAlignedTopAppBar(title = {
 
-                    Text(
-                        text = "Pay by Card",
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.rubik_medium))
-                        ),
-                        color = White_cl_90,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                },
-                navigationIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(35.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                navigateBack()
-                            }
-                            .padding(5.dp)
-
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
+            Text(
+                text = "Pay by Card",
+                style = TextStyle(
+                    fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.rubik_medium))
+                ),
+                color = White_cl_90,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        }, navigationIcon = {
+            Icon(painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(35.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        navigateBack()
+                    }
+                    .padding(5.dp)
 
             )
-        },
-        bottomBar = {
-            Column(
-                Modifier
-                    .background(Surface_cl)
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        )
+
+        )
+    }, bottomBar = {
+        Column(
+            Modifier.background(Surface_cl)
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(White_cl_30)
+            )
+
+            Row(
+                Modifier.padding(12.dp)
             ) {
-                Spacer(
+
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Text(
+                        ("total fare").uppercase(),
+                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                        style = TextStyle(
+                            color = White_cl_30
+                        )
+                    )
+                    Text(
+                        "₹ 45,307",
+                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                        style = TextStyle(
+                            color = White_cl_90, fontSize = 20.sp
+                        ),
+                        textAlign = TextAlign.End
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        navigateTicketView()
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(1.dp)
-                        .background(White_cl_30)
-                )
-
-                Row(
-                    Modifier
-                        .padding(12.dp)
-                )
-                {
-
-                    Column(
-                        Modifier
-                            .weight(1f)
-                            .padding(horizontal = 20.dp)
-                    ) {
-                        Text(
-                            ("total fare").uppercase(),
-                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                            style = TextStyle(
-                                color = White_cl_30
-                            )
+                        .weight(1f)
+                        .padding(horizontal = 12.dp)
+                        .height(40.dp)
+                        .background(
+                            brush = Brush.verticalGradient(colors = Constants.gradientColors),
+                            shape = RoundedCornerShape(16.dp)
                         )
-                        Text(
-                            "₹ 45,307",
-                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                            style = TextStyle(
-                                color = White_cl_90,
-                                fontSize = 20.sp
-                            ),
-                            textAlign = TextAlign.End
-                        )
-                    }
-
-                    Button(
-                        onClick = {
-                            navigateTicketView()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(horizontal = 12.dp)
-                            .height(40.dp)
-                            .background(
-                                brush = Brush.verticalGradient(colors = Constants.gradientColors),
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .align(Alignment.CenterVertically),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Text(
-                            "Continue",
-                            fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                            color = Color.Black,
-                            fontSize = 16.sp,
-                        )
-                    }
-
+                        .align(Alignment.CenterVertically),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        "Continue",
+                        fontFamily = FontFamily(Font(R.font.rubik_medium)),
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                    )
                 }
+
             }
-
-
         }
+
+
+    }
 
     ) {
 
@@ -185,8 +173,7 @@ fun CardDetailScreen(navigateBack: () -> Unit, navigateTicketView: () -> Unit) {
                 .padding(it)
                 .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState())
-        )
-        {
+        ) {
 
             Spacer(modifier = Modifier.height(16.dp))
             travelEditText(
@@ -216,16 +203,12 @@ fun CardDetailScreen(navigateBack: () -> Unit, navigateTicketView: () -> Unit) {
             )
 
             Row {
-                TextField(
-                    value = Formater(expText),
+                TextField(value = Formater(expText),
                     onValueChange = {},
                     label = {
                         Text(
-                            text = "EXPIRY DATE",
-                            color = White_cl_30,
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                                fontSize = 12.sp
+                            text = "EXPIRY DATE", color = White_cl_30, style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.rubik_medium)), fontSize = 12.sp
                             )
                         )
                     },
@@ -280,7 +263,7 @@ fun CardDetailScreen(navigateBack: () -> Unit, navigateTicketView: () -> Unit) {
 
             SimpleDatePickerInDatePickerDialog(
                 titleText = "EXPIRY DATE",
-                travelDate= expText,
+                travelDate = expText,
                 isValidationReq = Constants.DateValidation.NOT_VALIDATION
             ) { date ->
                 isOpenDate = false

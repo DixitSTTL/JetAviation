@@ -35,6 +35,7 @@ import com.app.jetaviation.MainDestinations.DATE_KEY
 import com.app.jetaviation.MainDestinations.DESTINATION_KEY
 import com.app.jetaviation.MainDestinations.SOURCE_KEY
 import com.app.jetaviation.ui.JsonNavType
+import com.app.jetaviation.ui.screen.covid.CovidScreen
 import com.app.jetaviation.ui.screen.dashbord.DashBoardScreen
 import com.app.jetaviation.ui.screen.filght.DataFlights
 import com.app.jetaviation.ui.screen.filght.FlightListScreen
@@ -72,9 +73,11 @@ fun NavGraph(
                 finishActivity()
             }
 
-            DashBoardScreen { source, dest, date, tripClass ->
+            DashBoardScreen ({ source, dest, date, tripClass ->
                 actions.navigateFlightList(source, dest, date, tripClass)
-            }
+            },{
+                actions.navigateCovidScreen()
+            })
         }
 
         composable(AppTabs.TRIPS.route) {
@@ -107,7 +110,7 @@ fun NavGraph(
                 navigateFlightDetails = {
                     actions.navigateFlightDetail()
                 },
-                navigateBack={
+                navigateBack = {
                     actions.navigateBack()
 
                 })
@@ -160,6 +163,14 @@ fun NavGraph(
                 })
         }
 
+        composable(MainDestinations.COVID_SCREEN) { backStackEntry: NavBackStackEntry ->
+
+            CovidScreen(
+                navigateBack = {
+                    actions.navigateBack()
+                })
+        }
+
     }
 }
 
@@ -171,6 +182,7 @@ object MainDestinations {
     const val TRIP_DETAIL = "trip_detail"
     const val CARD_DETAIL = "card_detail"
     const val TICKET_SCREEN = "ticket_screen"
+    const val COVID_SCREEN = "covid_screen"
 
 
     const val SOURCE_KEY = "source_key"
@@ -207,6 +219,12 @@ class MainActions(navController: NavHostController) {
     val navigateTicketView = {
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate(MainDestinations.TICKET_SCREEN)
+
+    }
+
+    val navigateCovidScreen = {
+        // In order to discard duplicated navigation events, we check the Lifecycle
+        navController.navigate(MainDestinations.COVID_SCREEN)
 
     }
 

@@ -33,6 +33,31 @@ object Constants {
             location = "Mumbai, India",
             name = "Chhatrapati Shivaji Intl Airport",
             shortName = "BOM"
+        ),
+        DataCities(
+            location = "Los Angeles, USA",
+            name = "Los Angeles International Airport",
+            shortName = "LAX"
+        ),
+        DataCities(
+            location = "Tokyo, Japan",
+            name = "Tokyo Haneda Airport",
+            shortName = "HND"
+        ),
+        DataCities(
+            location = "Singapore",
+            name = "Singapore Changi Airport",
+            shortName = "SIN"
+        ),
+        DataCities(
+            location = "Dubai, United Arab Emirates",
+            name = "Dubai International Airport",
+            shortName = "DXB"
+        ),
+        DataCities(
+            location = "Sydney, Australia",
+            name = "Sydney Kingsford Smith Airport ",
+            shortName = "SYD"
         )
     )
 

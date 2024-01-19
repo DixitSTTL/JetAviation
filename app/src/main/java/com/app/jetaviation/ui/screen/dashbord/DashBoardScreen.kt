@@ -82,7 +82,11 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) {
+fun DashBoardScreen(
+    navigateFlightList: (String, String, Long, String) -> Unit,
+    navigateCovidScreen: () -> Unit
+) {
+
     val modalBottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = false
     )
@@ -223,29 +227,37 @@ fun DashBoardScreen(navigateFlightList: (String, String, Long, String) -> Unit) 
 
             Spacer(modifier = Modifier.height(36.dp))
 
-            normalCard(str = "Check COVID-19 airline measures before you go", color = Yellow_cl)
+            normalCard(
+                str = "Check COVID-19 airline measures before you go",
+                color = Yellow_cl,
+                navigateCovidScreen
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             normalCard(
                 str = "India to US flight bookings open! Check all the countries open for travel",
-                color = Teal_cl
+                color = Teal_cl,
+                navigateCovidScreen = { }
             )
 
         }
 
         Spacer(modifier = Modifier.height(36.dp))
+
         Text(
             text = "DISCOVER MORE",
             fontFamily = FontFamily(Font(R.font.rubik_medium)),
             color = White_cl_30,
             modifier = Modifier.padding(horizontal = 20.dp)
         )
+
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyRow(modifier = Modifier.fillMaxWidth()) {
 
             item {
+
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Card(
@@ -1014,14 +1026,16 @@ fun mainSelection(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun normalCard(str: String = "hello", color: Color = Orange_cl) {
+fun normalCard(str: String = "hello", color: Color = Orange_cl, navigateCovidScreen: () -> Unit) {
     Card(
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(
             containerColor = color
         ),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { navigateCovidScreen() }
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -1050,7 +1064,7 @@ fun normalCard(str: String = "hello", color: Color = Orange_cl) {
 @Preview
 @Composable
 fun PreviewScreen() {
-    DashBoardScreen { _, _, _, _ -> }
+    DashBoardScreen({ _, _, _, _ -> }, {})
 }
 
 fun Formater(mill: Long): String {

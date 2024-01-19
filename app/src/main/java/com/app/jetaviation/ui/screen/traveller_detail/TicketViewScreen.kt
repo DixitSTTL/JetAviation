@@ -68,7 +68,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun TicketViewScreen(navigateBack: () -> Unit) {
 
-    var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.NOT_LOADED) }
+    var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.LOADED) }
     var item = DataTrips(
         sourceShort = "DEL",
         destinationShort = "JFK",
@@ -83,17 +83,14 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
         destinationTerminal = "Terminal 2",
     )
 
-
     val rotateAngle: Float by animateFloatAsState(
         targetValue = if (isLoaded == Constants.enumIsLoaded.NOT_LOADED) 0f else -1440f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 10000,
-                easing = FastOutSlowInEasing
+                durationMillis = 10000, easing = FastOutSlowInEasing
             )
         )
     )
-
 
     LaunchedEffect(key1 = "") {
         isLoaded = Constants.enumIsLoaded.LOADING
@@ -105,18 +102,14 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
     JetAviationTheme {
 
         Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            Modifier.fillMaxSize(), contentAlignment = Alignment.Center
         ) {
 
             Canvas(
-                Modifier
-                    .size(100.dp)
+                Modifier.size(100.dp)
             ) {
                 drawCircle(
-                    color = Card_cl,
-                    radius = size.minDimension / 2,
-                    style = Stroke(
+                    color = Card_cl, radius = size.minDimension / 2, style = Stroke(
                         width = 12f,
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f), 0f)
                     )
@@ -135,15 +128,13 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                 modifier = Modifier
                     .height(500.dp)
                     .align(alignment = Alignment.BottomCenter)
-                    .padding(vertical = 200.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(vertical = 200.dp), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     "Processing your payment",
                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
                     style = TextStyle(
-                        color = White_cl_90,
-                        fontSize = 16.sp
+                        color = White_cl_90, fontSize = 16.sp
 
                     )
                 )
@@ -152,11 +143,9 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                     "Connecting to the bank server",
                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                     style = TextStyle(
-                        color = White_cl_30,
-                        fontSize = 12.sp
+                        color = White_cl_30, fontSize = 12.sp
                     ),
-                    modifier = Modifier
-                        .padding(vertical = 3.dp),
+                    modifier = Modifier.padding(vertical = 3.dp),
                 )
             }
 
@@ -169,8 +158,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                     CenterAlignedTopAppBar(
                         title = {},
                         navigationIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_close),
+                            Icon(painter = painterResource(id = R.drawable.ic_close),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .size(35.dp)
@@ -185,7 +173,6 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = Color.Transparent
                         )
-
                     )
                 },
 
@@ -210,12 +197,10 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        "Ta-da!\n" +
-                                "Booking confirmed",
+                        "Ta-da!\n" + "Booking confirmed",
                         fontFamily = FontFamily(Font(R.font.rubik_regular)),
                         style = TextStyle(
-                            fontSize = 24.sp,
-                            color = White_cl_90
+                            fontSize = 24.sp, color = White_cl_90
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -223,25 +208,21 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        "We’ve sent you the ticket copy on your\n" +
-                                "email and WhatsApp.",
+                        "We’ve sent you the ticket copy on your\n" + "email and WhatsApp.",
                         fontFamily = FontFamily(Font(R.font.rubik_regular)),
                         style = TextStyle(
                             color = White_cl_90
                         ),
                         textAlign = TextAlign.Center
-
                     )
+
                     Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
+                        modifier = Modifier.height(20.dp)
                     )
 
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                    )
-                    {
+                        modifier = Modifier.fillMaxSize()
+                    ) {
 
                         Column(
                             modifier = Modifier
@@ -302,8 +283,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     item.sourceShort,
                                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 16.sp
+                                        color = Color.Black, fontSize = 16.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -311,14 +291,11 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                         .padding(end = 10.dp),
                                 )
 
-
-
                                 Text(
                                     item.destinationShort,
                                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 16.sp
+                                        color = Color.Black, fontSize = 16.sp
 
                                     ),
                                     modifier = Modifier
@@ -340,8 +317,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     item.sorceLocation,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -350,14 +326,11 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                         .alpha(0.3f),
                                 )
 
-
-
                                 Text(
                                     item.destinationLocation,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -377,8 +350,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     item.takeOffTime,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -387,14 +359,11 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                         .alpha(0.3f),
                                 )
 
-
-
                                 Text(
                                     item.landingTime,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -414,8 +383,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     item.sourceTerminal,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -425,13 +393,11 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                 )
 
 
-
                                 Text(
                                     item.destinationTerminal,
                                     fontFamily = FontFamily(Font(R.font.rubik_regular)),
                                     style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 12.sp
+                                        color = Color.Black, fontSize = 12.sp
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -452,26 +418,21 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     .background(Surface_cl)
                             )
 
-
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
+                                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
                             ) {
 
 
                                 Column(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                )
-                                {
+                                    modifier = Modifier.weight(1f)
+                                ) {
                                     Text(
                                         "GATE",
                                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                         style = TextStyle(
                                             color = Surface_cl,
                                         ),
-                                        modifier = Modifier
-                                            .alpha(0.3f),
+                                        modifier = Modifier.alpha(0.3f),
                                     )
                                     Text(
                                         "C2",
@@ -483,19 +444,16 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     )
                                 }
                                 Column(
-                                    modifier = Modifier
-                                        .weight(1f),
+                                    modifier = Modifier.weight(1f),
                                     horizontalAlignment = Alignment.CenterHorizontally
-                                )
-                                {
+                                ) {
                                     Text(
                                         "FLIGHT",
                                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                         style = TextStyle(
                                             color = Surface_cl,
                                         ),
-                                        modifier = Modifier
-                                            .alpha(0.3f),
+                                        modifier = Modifier.alpha(0.3f),
                                     )
                                     Text(
                                         "UA 902Y",
@@ -508,20 +466,17 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                 }
 
                                 Column(
-                                    modifier = Modifier
-                                        .weight(1f),
+                                    modifier = Modifier.weight(1f),
                                     horizontalAlignment = Alignment.End
 
-                                )
-                                {
+                                ) {
                                     Text(
                                         "SEAT",
                                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                         style = TextStyle(
                                             color = Surface_cl,
                                         ),
-                                        modifier = Modifier
-                                            .alpha(0.3f),
+                                        modifier = Modifier.alpha(0.3f),
                                     )
                                     Text(
                                         "14E",
@@ -532,7 +487,6 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                         modifier = Modifier,
                                     )
                                 }
-
 
                             }
 
@@ -546,24 +500,20 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                             )
 
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
+                                verticalAlignment = Alignment.CenterVertically, modifier = Modifier
                             ) {
 
 
                                 Column(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                )
-                                {
+                                    modifier = Modifier.weight(1f)
+                                ) {
                                     Text(
                                         "TRAVELLER",
                                         fontFamily = FontFamily(Font(R.font.rubik_medium)),
                                         style = TextStyle(
                                             color = Surface_cl,
                                         ),
-                                        modifier = Modifier
-                                            .alpha(0.3f),
+                                        modifier = Modifier.alpha(0.3f),
                                     )
                                     Text(
                                         "Samantha Ruth",
@@ -582,8 +532,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                         style = TextStyle(
                                             color = Surface_cl,
                                         ),
-                                        modifier = Modifier
-                                            .alpha(0.3f),
+                                        modifier = Modifier.alpha(0.3f),
                                     )
                                     Text(
                                         "Economy",
@@ -612,8 +561,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                 .fillMaxWidth()
                                 .clip(
                                     shape = RoundedCornerShape(
-                                        bottomEnd = 16.dp,
-                                        bottomStart = 16.dp
+                                        bottomEnd = 16.dp, bottomStart = 16.dp
                                     )
                                 )
                                 .background(Teal_cl)
@@ -630,8 +578,7 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                                     style = TextStyle(
                                         color = Surface_cl
                                     ),
-                                    modifier = Modifier
-                                        .alpha(0.3f),
+                                    modifier = Modifier.alpha(0.3f),
                                 )
 
                                 Text(
@@ -650,15 +597,11 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
                             )
 
                         }
-//
-
                     }
                 }
             }
-
         }
     }
-
 }
 
 @Preview

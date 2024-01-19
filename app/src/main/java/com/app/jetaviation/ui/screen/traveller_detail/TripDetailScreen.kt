@@ -81,7 +81,6 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
     }
 
 
-
     Scaffold(
         containerColor = Surface_cl,
         topBar = {
@@ -90,8 +89,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                     Text(
                         text = "Traveller Details",
                         style = TextStyle(
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.rubik_medium))
+                            fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.rubik_medium))
                         ),
                         color = White_cl_90,
                         modifier = Modifier.fillMaxWidth(),
@@ -100,8 +98,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 },
 
                 navigationIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
+                    Icon(painter = painterResource(id = R.drawable.ic_back),
                         contentDescription = "",
                         modifier = Modifier
                             .size(35.dp)
@@ -112,8 +109,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                             .padding(5.dp)
 
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
+                }, colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent
                 )
             )
@@ -150,8 +146,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                         style = TextStyle(
                             color = Surface_cl,
                         ),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                 }
@@ -159,18 +154,14 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     gender.forEach {
-                        RadioButton(
-                            selected = selected == it,
-                            onClick = {
-                                setSelected(it)
-                            }
-                        )
+                        RadioButton(selected = selected == it, onClick = {
+                            setSelected(it)
+                        })
 
                         Spacer(modifier = Modifier.width(4.dp))
 
@@ -204,8 +195,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 travelEditText(
                     mValue = lName,
                     mPlaceHolder = "LAST NAME",
-                    mModifier = Modifier
-                        .padding(vertical = 6.dp),
+                    mModifier = Modifier.padding(vertical = 6.dp),
                     str = {
                         lName = it
 
@@ -240,8 +230,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 )
 
                 travelDropDown(
-                    list = countryNamesList,
-                    label = "NATIONALITY"
+                    list = countryNamesList, label = "NATIONALITY"
                 )
 
                 TextField(
@@ -249,11 +238,8 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                     onValueChange = {},
                     label = {
                         Text(
-                            text = "DOB",
-                            color = White_cl_30,
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                                fontSize = 12.sp
+                            text = "DOB", color = White_cl_30, style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.rubik_medium)), fontSize = 12.sp
                             )
                         )
                     },
@@ -308,8 +294,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 )
 
                 travelDropDown(
-                    list = countryNamesList,
-                    label = "ISSUING COUNTRY"
+                    list = countryNamesList, label = "ISSUING COUNTRY"
                 )
 
                 TextField(
@@ -317,11 +302,8 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                     onValueChange = {},
                     label = {
                         Text(
-                            text = "EXPIRY",
-                            color = White_cl_30,
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                                fontSize = 12.sp
+                            text = "EXPIRY", color = White_cl_30, style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.rubik_medium)), fontSize = 12.sp
                             )
                         )
                     },
@@ -355,7 +337,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
             if (isOpenDate) {
 
                 SimpleDatePickerInDatePickerDialog(
-                    titleText="DATE OF BIRTH",
+                    titleText = "DATE OF BIRTH",
                     dobText,
                     isValidationReq = Constants.DateValidation.PAST_DATE
                 ) { date ->
@@ -367,7 +349,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
             if (isOpenExpDate) {
 
                 SimpleDatePickerInDatePickerDialog(
-                    titleText="EXPIRY DATE",
+                    titleText = "EXPIRY DATE",
                     expText,
                     isValidationReq = Constants.DateValidation.NOT_VALIDATION
                 ) { date ->
@@ -380,8 +362,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
 
         bottomBar = {
             Column(
-                Modifier
-                    .background(Surface_cl)
+                Modifier.background(Surface_cl)
             ) {
                 Spacer(
                     modifier = Modifier
@@ -391,10 +372,8 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                 )
 
                 Row(
-                    Modifier
-                        .padding(12.dp)
-                )
-                {
+                    Modifier.padding(12.dp)
+                ) {
 
                     Column(
                         Modifier
@@ -412,8 +391,7 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
                             "₹ 45,307",
                             fontFamily = FontFamily(Font(R.font.rubik_medium)),
                             style = TextStyle(
-                                color = White_cl_90,
-                                fontSize = 20.sp
+                                color = White_cl_90, fontSize = 20.sp
                             ),
                             textAlign = TextAlign.End
                         )
@@ -448,7 +426,6 @@ fun TravellerDetailScreen(navigateBack: () -> Unit, navigateCardDetail: () -> Un
 
                 }
             }
-
 
         }
 
