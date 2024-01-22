@@ -41,7 +41,7 @@ import com.app.jetaviation.ui.screen.filght.DataFlights
 import com.app.jetaviation.ui.screen.filght.FlightListScreen
 import com.app.jetaviation.ui.screen.flight_detail.FlightDetailScreen
 import com.app.jetaviation.ui.screen.traveller_detail.CardDetailScreen
-import com.app.jetaviation.ui.screen.traveller_detail.TicketViewScreen
+import com.app.jetaviation.ui.screen.traveller_detail.GenerateTicketScreen
 import com.app.jetaviation.ui.screen.traveller_detail.TravellerDetailScreen
 import com.app.jetaviation.ui.screen.trips.TripScreen
 import com.google.gson.Gson
@@ -73,9 +73,9 @@ fun NavGraph(
                 finishActivity()
             }
 
-            DashBoardScreen ({ source, dest, date, tripClass ->
+            DashBoardScreen({ source, dest, date, tripClass ->
                 actions.navigateFlightList(source, dest, date, tripClass)
-            },{
+            }, {
                 actions.navigateCovidScreen()
             })
         }
@@ -151,13 +151,13 @@ fun NavGraph(
                     actions.navigateBack()
                 },
                 navigateTicketView = {
-                    actions.navigateTicketView()
+                    actions.navigateGenerateTicket()
                 })
         }
 
         composable(MainDestinations.TICKET_SCREEN) { backStackEntry: NavBackStackEntry ->
 
-            TicketViewScreen(
+            GenerateTicketScreen(
                 navigateBack = {
                     actions.navigateBack()
                 })
@@ -216,7 +216,7 @@ class MainActions(navController: NavHostController) {
         navController.navigate(MainDestinations.CARD_DETAIL)
 
     }
-    val navigateTicketView = {
+    val navigateGenerateTicket = {
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate(MainDestinations.TICKET_SCREEN)
 
@@ -228,7 +228,6 @@ class MainActions(navController: NavHostController) {
 
     }
 
-    // Used from FLIGHT_DETAIL
     val navigateTripDetail = {
         // In order to discard duplicated navigation events, we check the Lifecycle
         navController.navigate(MainDestinations.TRIP_DETAIL)

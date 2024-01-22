@@ -66,9 +66,9 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TicketViewScreen(navigateBack: () -> Unit) {
+fun GenerateTicketScreen(navigateBack: () -> Unit) {
 
-    var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.LOADED) }
+    var isLoaded by remember { mutableStateOf(Constants.enumIsLoaded.NOT_LOADED) }
     var item = DataTrips(
         sourceShort = "DEL",
         destinationShort = "JFK",
@@ -607,5 +607,5 @@ fun TicketViewScreen(navigateBack: () -> Unit) {
 @Preview
 @Composable
 fun previewTicketViewScreen() {
-    TicketViewScreen({})
+    GenerateTicketScreen({})
 }
