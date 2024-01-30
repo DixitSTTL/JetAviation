@@ -34,7 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -172,24 +174,27 @@ fun CovidScreen(navigateBack: () -> Unit) {
 
     }
 }
+
 @Composable
 fun DotsIndicator(
-    totalDots : Int,
-    selectedIndex : Int,
+    totalDots: Int,
+    selectedIndex: Int,
     selectedColor: Color,
     unSelectedColor: Color,
     mModifier: Modifier,
-){
+) {
 
-    LazyRow(modifier = mModifier) {
+    LazyRow(modifier = mModifier, verticalAlignment = Alignment.CenterVertically) {
 
         items(totalDots) { index ->
             if (index == selectedIndex) {
-                Box(
+                Image(
+                    painterResource(id = R.drawable.ic_flight),
+                    contentDescription = "",
                     modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(selectedColor)
+                        .size(16.dp)
+                        .rotate(45f),
+                    colorFilter = ColorFilter.tint(Orange_cl)
                 )
             } else {
                 Box(

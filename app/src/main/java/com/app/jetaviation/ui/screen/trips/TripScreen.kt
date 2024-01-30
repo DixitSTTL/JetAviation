@@ -177,7 +177,7 @@ fun TripScreen() {
                 content = {
                     (LocalView.current.parent as? DialogWindowProvider)?.window?.let { window ->
                         window.setWindowAnimations(-1)
-                        window.setDimAmount(0.2f)
+                        window.setDimAmount(0.6f)
                     }
 
                     Column(

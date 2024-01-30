@@ -1,6 +1,8 @@
 package com.app.jetaviation.ui.screen.dashbord
 
+import android.content.Context
 import android.text.TextUtils
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -54,6 +56,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -132,6 +135,7 @@ fun DashBoardScreen(
     var returnDate by remember {
         mutableLongStateOf(currentTime)
     }
+    var context = LocalContext.current
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(20.dp))
@@ -187,40 +191,29 @@ fun DashBoardScreen(
 
             Button(
                 onClick = {
-                    navigateFlightList(sourceText, destinationText, travelDate, classText)
+                    if (validationFun(sourceText, destinationText, travelDate, classText,context)) {
+
+                        navigateFlightList(sourceText, destinationText, travelDate, classText)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
                     .background(
                         brush = Brush.verticalGradient(
-                            colors = if (Validation(
-                                    sourceText,
-                                    destinationText,
-                                    classText
-                                )
-                            ) gradientColors else listOf(
-                                Card_cl,
-                                Card_cl
-                            )
+                            colors = gradientColors
                         ),
                         shape = RoundedCornerShape(16.dp)
                     ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
                 ),
-                enabled = Validation(sourceText, destinationText, classText),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     "Search Flights",
                     fontFamily = FontFamily(Font(R.font.rubik_medium)),
-                    color = if (Validation(
-                            sourceText,
-                            destinationText,
-                            classText
-                        )
-                    ) Color.Black else White_cl_30,
+                    color = Color.Black,
                     fontSize = 16.sp,
                 )
             }
@@ -621,17 +614,44 @@ fun DashBoardScreen(
     }
 }
 
-fun Validation(sourceText: String, destinationText: String, classText: String): Boolean {
+fun validationFun(
+    sourceText: String,
+    destinationText: String,
+    travelDate: Long,
+    classText: String,
+    context: Context
+): Boolean {
+    if (TextUtils.isEmpty(sourceText)){
+        showSnackBar("Please select source",context)
+        return false
+    }
 
-    if (TextUtils.isEmpty(sourceText))
-        return false
-    if (TextUtils.isEmpty(destinationText))
-        return false
-    if (TextUtils.isEmpty(classText))
-        return false
+    else if (TextUtils.isEmpty(destinationText)){
+        showSnackBar("Please select destination",context)
 
+        return false
+    }
+
+    else if (TextUtils.isEmpty(travelDate.toString())){
+        showSnackBar("Please select travel date",context)
+
+        return false
+    }
+
+    else if (TextUtils.isEmpty(classText)){
+        showSnackBar("Please select class of coach",context)
+
+        return false
+    }
 
     return true
+
+}
+
+fun showSnackBar(text:String,context:Context){
+
+    Toast.makeText(context,text,Toast.LENGTH_SHORT).show()
+
 }
 
 
